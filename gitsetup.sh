@@ -1,4 +1,7 @@
 #!/bin/sh
+#
+# wget https://c0f.github.io/gitsetup.sh
+#
 SETGIT=`which git`
 SETOS=`uname | tr '[:upper:]' '[:lower:]'`
 SETGITNAME=`uname -a`
