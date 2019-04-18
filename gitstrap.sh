@@ -1,29 +1,36 @@
 #!/bin/sh
-BANNER=⏺⏺⏺⏺⏺
+# Banner
+B=⏺⏺⏺⏺⏺
  
-GITEMAIL=$1
- 
+if [ -z "$1" ]; then
+ echo "$B Enter Github email address as command line parameter"
+ exit 
+else
+ GITEMAIL=$1
+ echo "$B GITEMAIL is $GITEMAIL"
+fi
+
 if [ ! -x "$(command -v "git")" ]; then
- echo "$BANNER Git not found, installing git"
+ echo "$B Git not found, installing git"
  sudo apt -y install git
 fi
 
 if [ ! -x "$(command -v "sshd")" ]; then
- echo "$BANNER OpenSSH not found, installing openssh-server"
+ echo "$B OpenSSH not found, installing openssh-server"
  sudo apt -y install openssh-server
 fi
 
 SETGIT=`which git`
-echo $BANNER Using $SETGIT
+echo $B Using $SETGIT
 
 SETOS=`uname | tr '[:upper:]' '[:lower:]'`
-echo $BANNER OS is $SETOS
+echo $B OS is $SETOS
 
 SETGITNAME=`uname -a`
-echo $BANNER GITNAME is $SETGITNAME
+echo $B GITNAME is $SETGITNAME
 
 if [ ! -f ~/.gitcfg/config ]; then
- echo $BANNER  Creating new repo 
+ echo $B  Creating new repo 
  git init --bare $HOME/.gitcfg
 fi
 
@@ -31,30 +38,29 @@ echo "alias gitc='$SETGIT --git-dir=$HOME/.gitcfg/ --work-tree=$HOME'" >> $HOME/
 alias gitc='$SETGIT --git-dir=$HOME/.gitcfg/ --work-tree=$HOME'
 echo ".gitcfg" >> ~/.gitignore
 
-echo $BANNER Settings
+echo $B Settings
 gitc config --local status.showUntrackedFiles no
 git config --global credential.helper cache
 git config --global credential.helper 'cache --timeout=7200'
 git config --global user.email "$SETGITEMAIL"
 git config --global user.name "$SETGITNAME"
 
-echo $BANNER Remote will be https://github.com/c0f/$SETOS.git
+echo $B Remote will be https://github.com/c0f/$SETOS.git
 gitc remote add origin https://github.com/c0f/$SETOS.git
 
-echo $BANNER Git Config
+echo $B Git Config
 gitc config --list | cat
 
-echo $BANNER Git Remote Settings
+echo $B Git Remote Settings
 gitc remote -v
 
-echo $BANNER Git Status
+echo $B Git Status
 gitc status
 
 echo "alias gitc='$SETGIT --git-dir=$HOME/.gitcfg/ --work-tree=$HOME'" >> ~/.bashrc
 
-echo $BANNER Use this alias, then gitc clone
+echo $B Use this alias, then gitc clone
 echo "rm .bashrc .gitignore .profile .Xdefaults"
 echo "alias gitc='$SETGIT --git-dir=$HOME/.gitcfg/ --work-tree=$HOME'"
 echo "gitc pull origin master"
 echo " "
-
