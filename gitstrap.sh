@@ -1,7 +1,7 @@
 #!/bin/sh
 # Banner
 B=⏺⏺⏺⏺⏺
- 
+
 if [ -z "$1" ]; then
  echo "$B Enter Github email address as command line parameter"
  exit 
@@ -44,6 +44,7 @@ git config --global credential.helper cache
 git config --global credential.helper 'cache --timeout=7200'
 git config --global user.email "$SETGITEMAIL"
 git config --global user.name "$SETGITNAME"
+git config --global user.username c0f
 
 echo $B Remote will be https://github.com/c0f/$SETOS.git
 gitc remote add origin https://github.com/c0f/$SETOS.git
@@ -64,3 +65,4 @@ echo "rm .bashrc .gitignore .profile .Xdefaults"
 echo "alias gitc='$SETGIT --git-dir=$HOME/.gitcfg/ --work-tree=$HOME'"
 echo "gitc pull origin master"
 echo " "
+
