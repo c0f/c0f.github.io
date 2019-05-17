@@ -61,8 +61,7 @@ gitc status
 echo "alias gitc='$SETGIT --git-dir=$HOME/.gitcfg/ --work-tree=$HOME'" >> ~/.bashrc
 
 echo $B Use this alias, then gitc clone
-echo "rm .bashrc .gitignore .profile .Xdefaults"
+echo "rm .bashrc .gitignore .profile .Xdefaults .config/kateschemarc .config/kglobalshortcutsrc .config/kwinrc"
 echo "alias gitc='$SETGIT --git-dir=$HOME/.gitcfg/ --work-tree=$HOME'"
 echo "gitc pull origin master"
 echo " "
-
