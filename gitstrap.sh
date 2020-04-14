@@ -1,6 +1,6 @@
 #!/bin/sh
 # Banner
-B=⏺⏺⏺⏺⏺
+B=[][][][]
 
 if [ -z "$1" ]; then
  echo "$B Enter Github email address as command line parameter"
@@ -63,6 +63,7 @@ echo "alias gitc='$SETGIT --git-dir=$HOME/.gitcfg/ --work-tree=$HOME'" >> ~/.bas
 echo $B Use this alias, then gitc clone
 echo "rm .bashrc .gitignore .profile .Xdefaults .config/kateschemarc .config/kglobalshortcutsrc .config/kwinrc .config/konsolerc"
 echo "rm .config/openbox/lxqt-rc.xml .config/pcmanfm-qt/lxqt/settings.conf .config/qterminal.org/qterminal.ini"
+echo "rm .xscreensaver .config/lxterminal/lxterminal.conf
 echo "alias gitc='$SETGIT --git-dir=$HOME/.gitcfg/ --work-tree=$HOME'"
 echo "gitc pull origin master"
 echo " "
