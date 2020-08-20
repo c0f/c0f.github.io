@@ -64,7 +64,7 @@ echo $B Use this alias, then gitc clone
 echo "rm .bashrc .gitignore .profile .Xdefaults .config/kateschemarc .config/kglobalshortcutsrc .config/kwinrc .config/konsolerc"
 echo "rm .config/openbox/lxqt-rc.xml .config/pcmanfm-qt/lxqt/settings.conf .config/qterminal.org/qterminal.ini"
 echo "rm .xscreensaver .config/lxterminal/lxterminal.conf"
-echo "rm .bash_profile .config/gwenviewrc .config/katerc .xinitrc"
+echo "rm .bash_profile .config/gwenviewrc .config/katerc"
 echo "alias gitc='$SETGIT --git-dir=$HOME/.gitcfg/ --work-tree=$HOME'"
 echo "gitc pull origin master"
 echo " "
