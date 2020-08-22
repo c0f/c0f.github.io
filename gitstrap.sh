@@ -61,10 +61,10 @@ gitc status
 echo "alias gitc='$SETGIT --git-dir=$HOME/.gitcfg/ --work-tree=$HOME'" >> ~/.bashrc
 
 echo $B Use this alias, then gitc clone
-echo "rm .bashrc .gitignore .profile .Xdefaults .config/kateschemarc .config/kglobalshortcutsrc .config/kwinrc .config/konsolerc"
-echo "rm .config/openbox/lxqt-rc.xml .config/pcmanfm-qt/lxqt/settings.conf .config/qterminal.org/qterminal.ini"
-echo "rm .xscreensaver .config/lxterminal/lxterminal.conf"
-echo "rm .bash_profile .config/gwenviewrc .config/katerc"
+echo "rm .bashrc .bash_profile .gitignore .profile .Xdefaults .xscreensaver"
+echo "rm .config/kateschemarc .config/kglobalshortcutsrc .config/kwinrc .config/konsolerc .config/gwenviewrc .config/katerc"
+echo "rm .config/openbox/lxqt-rc.xml .config/pcmanfm-qt/lxqt/settings.conf .config/qterminal.org/qterminal.ini .config/lxterminal/lxterminal.conf"
+echo "rm .config/xfce4/xfconf/xfce-perchannel-xml/thunar.xml"
 echo "alias gitc='$SETGIT --git-dir=$HOME/.gitcfg/ --work-tree=$HOME'"
 echo "gitc pull origin master"
 echo " "
