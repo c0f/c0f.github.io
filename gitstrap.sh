@@ -46,8 +46,8 @@ git config --global user.email "$SETGITEMAIL"
 git config --global user.name "$SETGITNAME"
 git config --global user.username c0f
 
-echo $B Remote will be https://github.com/c0f/$SETOS.git
-gitc remote add origin https://github.com/c0f/$SETOS.git
+echo $B Remote will be ssh://git@github.com/c0f/$SETOS.git
+gitc remote add origin ssh://git@github.com/c0f/$SETOS.git
 
 echo $B Git Config
 gitc config --list | cat
@@ -60,12 +60,22 @@ gitc status
 
 echo "alias gitc='$SETGIT --git-dir=$HOME/.gitcfg/ --work-tree=$HOME'" >> ~/.bashrc
 
-echo $B Use this alias, then gitc clone
+echo $B Create and set permmissions on ~/.ssh
+mkdir ~/.ssh
+chmod 700 ~/.ssh
+
+echo $B Connecting to github via ssh
+ssh -vT git@ssh.github.com
+
+echo $B These files will prevent the first pull
 echo "rm .bashrc .bash_profile .gitignore .profile .Xdefaults .xscreensaver"
 echo "rm .config/kateschemarc .config/kglobalshortcutsrc .config/kwinrc .config/konsolerc .config/gwenviewrc .config/katerc"
 echo "rm .config/openbox/lxqt-rc.xml .config/pcmanfm-qt/lxqt/settings.conf .config/qterminal.org/qterminal.ini .config/lxterminal/lxterminal.conf"
 echo "rm .config/xfce4/xfconf/xfce-perchannel-xml/thunar.xml"
+
+echo $B Use this alias, then gitc clone
 echo "alias gitc='$SETGIT --git-dir=$HOME/.gitcfg/ --work-tree=$HOME'"
 echo "gitc pull origin master"
 echo " "
+
 
