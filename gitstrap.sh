@@ -4,7 +4,7 @@ B=[][][][]
 
 if [ -z "$1" ]; then
  echo "$B Enter Github email address as command line parameter"
- exit 
+ exit
 else
  GITEMAIL=$1
  echo "$B GITEMAIL is $GITEMAIL"
@@ -21,24 +21,31 @@ if [ ! -x "$(command -v "sshd")" ]; then
 fi
 
 SETGIT=`which git`
-echo $B Using $SETGIT
+echo "$B Using $SETGIT"
 
 SETOS=`uname | tr '[:upper:]' '[:lower:]'`
-echo $B OS is $SETOS
+echo "$B OS is $SETOS"
 
 SETGITNAME=`uname -a`
-echo $B GITNAME is $SETGITNAME
+echo "$B GITNAME is $SETGITNAME"
 
 if [ ! -f ~/.gitcfg/config ]; then
- echo $B  Creating new repo 
+ echo "$B  Creating new repo"
  git init --bare $HOME/.gitcfg
 fi
 
-echo "alias gitc='$SETGIT --git-dir=$HOME/.gitcfg/ --work-tree=$HOME'" >> $HOME/.bashrc
-alias gitc='$SETGIT --git-dir=$HOME/.gitcfg/ --work-tree=$HOME'
-echo ".gitcfg" >> ~/.gitignore
+if ! grep -q "alias gitc='$SETGIT --git-dir=$HOME/.gitcfg/ --work-tree=$HOME'" $HOME/.bashrc; then
+ echo "$B Adding gitc alias to .bashrc"
+ echo "alias gitc='$SETGIT --git-dir=$HOME/.gitcfg/ --work-tree=$HOME'" >> $HOME/.bashrc
+fi
 
-echo $B Settings
+alias gitc='$SETGIT --git-dir=$HOME/.gitcfg/ --work-tree=$HOME'
+
+if [ ! -d ~/.gitcfg ]; then
+ echo ".gitcfg" >> ~/.gitignore
+fi
+
+echo "$B Settings"
 gitc config --local status.showUntrackedFiles no
 git config --global credential.helper cache
 git config --global credential.helper 'cache --timeout=7200'
@@ -46,36 +53,60 @@ git config --global user.email "$SETGITEMAIL"
 git config --global user.name "$SETGITNAME"
 git config --global user.username c0f
 
-echo $B Remote will be ssh://git@github.com/c0f/$SETOS.git
+echo "$B Remote will be ssh://git@github.com/c0f/$SETOS.git"
 gitc remote add origin ssh://git@github.com/c0f/$SETOS.git
 
-echo $B Git Config
+echo "$B Create ~/.ssh if it does not exist"
+if [ ! -d ~/.ssh ]; then
+ mkdir ~/.ssh
+ chmod 700 ~/.ssh
+fi
+
+if [ ! -f ~/.ssh/github ]; then
+ echo "$B Paste github PRIVATE key, waiting 3s"
+ sleep 3
+ nano ~/.ssh/github
+ chmod 600 ~/.ssh/github
+fi
+
+if [ ! -f ~/.ssh/github.pub ]; then
+ echo "$B Paste github PUBLIC key, waiting 3s"
+ sleep 3
+ nano ~/.ssh/github.pub
+ chmod 600 ~/.ssh/github.pub
+fi
+
+echo "$B Paste github config to ~/.ssh/config, waiting 5s"
+echo "Host github.com"
+echo " User c0f"
+echo " IdentityFile = ~/.ssh/github"
+echo " Hostname ssh.github.com"
+echo " Port 443"
+echo "Host *"
+echo " AddKeysToAgent yes"
+sleep 5
+nano ~/.ssh/config
+chmod 664 ~/.ssh/config
+
+echo "$B Connecting to Github via ssh to add to known hosts"
+ssh -vT git@github.com
+
+echo "$B Git Config"
 gitc config --list | cat
 
-echo $B Git Remote Settings
+echo "$B Git Remote Settings"
 gitc remote -v
 
-echo $B Git Status
+echo "$B Git Status"
 gitc status
 
-echo "alias gitc='$SETGIT --git-dir=$HOME/.gitcfg/ --work-tree=$HOME'" >> ~/.bashrc
-
-echo $B Create and set permmissions on ~/.ssh
-mkdir ~/.ssh
-chmod 700 ~/.ssh
-
-echo $B Connecting to github via ssh
-ssh -vT git@ssh.github.com
-
-echo $B These files will prevent the first pull
+echo "$B Delete these files that might prevent first pull"
 echo "rm .bashrc .bash_profile .gitignore .profile .Xdefaults .xscreensaver"
 echo "rm .config/kateschemarc .config/kglobalshortcutsrc .config/kwinrc .config/konsolerc .config/gwenviewrc .config/katerc"
 echo "rm .config/openbox/lxqt-rc.xml .config/pcmanfm-qt/lxqt/settings.conf .config/qterminal.org/qterminal.ini .config/lxterminal/lxterminal.conf"
 echo "rm .config/xfce4/xfconf/xfce-perchannel-xml/thunar.xml"
 
-echo $B Use this alias, then gitc clone
+echo "$B Use this alias, then gitc clone"
 echo "alias gitc='$SETGIT --git-dir=$HOME/.gitcfg/ --work-tree=$HOME'"
 echo "gitc pull origin master"
 echo " "
-
-
