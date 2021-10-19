@@ -29,8 +29,56 @@ echo "$B OS is $SETOS"
 SETGITNAME=`uname -a`
 echo "$B GITNAME is $SETGITNAME"
 
-if [ ! -f ~/.gitcfg/config ]; then
- echo "$B  Creating new repo"
+# ssh key setup
+if [ ! -f $HOME/.ssh/github ]; then
+ echo "$B Attempting to copy key from another host"
+ mkdir -p $HOME/.ssh
+ scp -T pi@10.0.0.1:"/home/pi/.ssh/githu* /home/pi/.ssh/config" $HOME/.ssh/
+ chmod 600 $HOME/.ssh/github
+ chmod 644 $HOME/.ssh/github.pub
+ chmod 644 $HOME/.ssh/config
+fi
+
+if [ ! -d $HOME/.ssh ]; then
+ echo "$B Creating ~/.ssh because it does not exist"
+ mkdir $HOME/.ssh
+ chmod 700 $HOME/.ssh
+fi
+
+if [ ! -f $HOME/.ssh/github ]; then
+ echo "$B Paste github PRIVATE key, waiting 3s"
+ sleep 2
+ nano $HOME/.ssh/github
+ chmod 600 $HOME/.ssh/github
+fi
+
+if [ ! -f $HOME/.ssh/github.pub ]; then
+ echo "$B Paste github PUBLIC key, waiting 3s"
+ sleep 2
+ nano $HOME/.ssh/github.pub
+ chmod 644 $HOME/.ssh/github.pub
+fi
+
+if ! grep -q "Host github.com" $HOME/.ssh/config; then
+ echo "$B Paste github config to ~/.ssh/config, waiting 5s"
+ echo "Host github.com"
+ echo " User c0f"
+ echo " IdentityFile = ~/.ssh/github"
+ echo " Hostname ssh.github.com"
+ echo " Port 443"
+ echo "Host *"
+ echo " AddKeysToAgent yes"
+ sleep 5
+ nano $HOME/.ssh/config
+ chmod 644 $HOME/.ssh/config
+fi
+
+echo "$B Connecting to Github via ssh to add to known hosts"
+ssh -T git@github.com
+
+# git repo setup
+if [ ! -f $HOME/.gitcfg/config ]; then
+ echo "$B Creating new repo"
  git init --bare $HOME/.gitcfg
 fi
 
@@ -41,8 +89,8 @@ fi
 
 alias gitc='$SETGIT --git-dir=$HOME/.gitcfg/ --work-tree=$HOME'
 
-if [ ! -d ~/.gitcfg ]; then
- echo ".gitcfg" >> ~/.gitignore
+if [ ! -d $HOME/.gitcfg ]; then
+ echo ".gitcfg" >> $HOME/.gitignore
 fi
 
 echo "$B Settings"
@@ -55,41 +103,6 @@ git config --global user.username c0f
 
 echo "$B Remote will be ssh://git@github.com/c0f/$SETOS.git"
 gitc remote add origin ssh://git@github.com/c0f/$SETOS.git
-
-echo "$B Create ~/.ssh if it does not exist"
-if [ ! -d ~/.ssh ]; then
- mkdir ~/.ssh
- chmod 700 ~/.ssh
-fi
-
-if [ ! -f ~/.ssh/github ]; then
- echo "$B Paste github PRIVATE key, waiting 3s"
- sleep 3
- nano ~/.ssh/github
- chmod 600 ~/.ssh/github
-fi
-
-if [ ! -f ~/.ssh/github.pub ]; then
- echo "$B Paste github PUBLIC key, waiting 3s"
- sleep 3
- nano ~/.ssh/github.pub
- chmod 600 ~/.ssh/github.pub
-fi
-
-echo "$B Paste github config to ~/.ssh/config, waiting 5s"
-echo "Host github.com"
-echo " User c0f"
-echo " IdentityFile = ~/.ssh/github"
-echo " Hostname ssh.github.com"
-echo " Port 443"
-echo "Host *"
-echo " AddKeysToAgent yes"
-sleep 5
-nano ~/.ssh/config
-chmod 664 ~/.ssh/config
-
-echo "$B Connecting to Github via ssh to add to known hosts"
-ssh -vT git@github.com
 
 echo "$B Git Config"
 gitc config --list | cat
