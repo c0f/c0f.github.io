@@ -68,7 +68,7 @@ if ! grep -q "Host github.com" $HOME/.ssh/config; then
  echo " Port 443"
  echo "Host *"
  echo " AddKeysToAgent yes"
- sleep 5
+ sleep 10
  nano $HOME/.ssh/config
  chmod 644 $HOME/.ssh/config
 fi
