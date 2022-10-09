@@ -86,7 +86,7 @@ if [ ! -d $HOME/.gitcfg ]; then
 fi
 
 echo "$B Installing"
-sudo apt -y install fail2ban auditd msmtp msmtp-mta
+sudo apt -y install fail2ban auditd msmtp msmtp-mta s-nail
 
 echo "$B Settings"
 gitc config --local status.showUntrackedFiles no
