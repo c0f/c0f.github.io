@@ -85,6 +85,9 @@ if [ ! -d $HOME/.gitcfg ]; then
  echo ".gitcfg" >> $HOME/.gitignore
 fi
 
+echo "$B Installing"
+sudo apt -y install fail2ban auditd msmtp msmtp-mta
+
 echo "$B Settings"
 gitc config --local status.showUntrackedFiles no
 git config --global credential.helper cache
