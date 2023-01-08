@@ -76,7 +76,7 @@ fi
 
 if ! grep -q "alias gitc='$SETGIT --git-dir=$HOME/.gitcfg/ --work-tree=$HOME'" $HOME/.bashrc; then
  echo "$B Adding gitc alias to .bashrc"
- echo "alias gitc='$SETGIT --git-dir=$HOME/.gitcfg/ --work-tree=$HOME'" >> $HOME/.bashrc
+ echo "alias gitc='git --git-dir=$HOME/.gitcfg/ --work-tree=$HOME'" >> $HOME/.bashrc
 fi
 
 alias gitc='$SETGIT --git-dir=$HOME/.gitcfg/ --work-tree=$HOME'
