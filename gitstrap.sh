@@ -1,4 +1,5 @@
-#!/bin/sh
+#!/usr/bin/bash
+
 # Banner
 B=[][][][]
 
@@ -20,6 +21,14 @@ if [ ! -x "$(command -v "sshd")" ]; then
  sudo apt -y install openssh-server
 fi
 
+echo "$B Enabling ssh server"
+if (systemctl is-active --quiet sshd.service); then
+ echo "$B SSHD is already started"
+else
+ sudo systemctl enable --now sshd.service
+ sudo systemctl status sshd.service
+fi
+
 SETGIT=`which git`
 echo "$B Using $SETGIT"
 
@@ -32,11 +41,18 @@ echo "$B GITNAME is $SETGITNAME"
 # ssh key setup
 if [ ! -f $HOME/.ssh/github ]; then
  echo "$B Attempting to copy key from another host"
- mkdir -p $HOME/.ssh
- scp -T pi@10.0.0.1:"/home/pi/.ssh/githu* /home/pi/.ssh/config" $HOME/.ssh/
+ echo "$B Requires root login via password, run this on source host:"
+ echo "sudo sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config"
+ echo "systemctl restart sshd"
+ echo " "
+ mkdir -p $HOME/.ssh 2>/dev/null
+ scp -OT root@10.0.0.4:".ssh/github .ssh/github.pub .ssh/config" $HOME/.ssh/
  chmod 600 $HOME/.ssh/github
  chmod 644 $HOME/.ssh/github.pub
  chmod 644 $HOME/.ssh/config
+ echo "$B Now change source host ssh config back"
+ echo "sed -i 's/PermitRootLogin yes/#PermitRootLogin prohibit-password/' sshd_config"
+ echo "systemctl restart sshd"
 fi
 
 if [ ! -d $HOME/.ssh ]; then
@@ -60,16 +76,26 @@ if [ ! -f $HOME/.ssh/github.pub ]; then
 fi
 
 if ! grep -q "Host github.com" $HOME/.ssh/config; then
- echo "$B Paste github config to ~/.ssh/config, waiting 5s"
- echo "Host github.com"
- echo " User c0f"
- echo " IdentityFile = ~/.ssh/github"
- echo " Hostname ssh.github.com"
- echo " Port 443"
- echo "Host *"
- echo " AddKeysToAgent yes"
- sleep 10
- nano $HOME/.ssh/config
+cat >> $HOME/.ssh/config<< EOF
+Host github.com
+ User c0f
+ IdentityFile = ~/.ssh/github
+ Hostname ssh.github.com
+ Port 443
+ Host *
+ AddKeysToAgent yes
+EOF
+
+# echo "$B Paste github config to ~/.ssh/config, waiting 7s"
+# echo "Host github.com"
+# echo " User c0f"
+# echo " IdentityFile = ~/.ssh/github"
+# echo " Hostname ssh.github.com"
+# echo " Port 443"
+# echo "Host *"
+# echo " AddKeysToAgent yes"
+# sleep 7
+# nano $HOME/.ssh/config
  chmod 644 $HOME/.ssh/config
 fi
 
@@ -88,12 +114,13 @@ if ! grep -q "alias gitc='$SETGIT --git-dir=$HOME/.gitcfg/ --work-tree=$HOME'" $
 fi
 
 alias gitc='$SETGIT --git-dir=$HOME/.gitcfg/ --work-tree=$HOME'
+shopt -s expand_aliases
 
 if [ ! -d $HOME/.gitcfg ]; then
  echo ".gitcfg" >> $HOME/.gitignore
 fi
 
-echo "$B Settings"
+echo "$B Changing settings"
 gitc config --local status.showUntrackedFiles no
 git config --global credential.helper cache
 git config --global credential.helper 'cache --timeout=7200'
@@ -122,4 +149,9 @@ echo "rm .config/xfce4/xfconf/xfce-perchannel-xml/thunar.xml"
 echo "$B Use this alias, then gitc clone"
 echo "alias gitc='$SETGIT --git-dir=$HOME/.gitcfg/ --work-tree=$HOME'"
 echo "gitc pull origin master"
+echo " "
+
+echo "$B Run this command on other hosts to copy remote user keys to ${USERNAME}'s authorized_keys on this host"
+MYIP=$(ip route get 8.8.8.8 | sed -n '/src/{s/.*src *\([^ ]*\).*/\1/p;q}')
+echo "ssh-copy-id $USERNAME@$MYIP"
 echo " "
