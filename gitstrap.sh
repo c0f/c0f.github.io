@@ -153,5 +153,5 @@ echo " "
 
 echo "$B Run this command on other hosts to copy remote user keys to ${USERNAME}'s authorized_keys on this host"
 MYIP=$(ip route get 8.8.8.8 | sed -n '/src/{s/.*src *\([^ ]*\).*/\1/p;q}')
-echo "ssh-copy-id $USERNAME@$MYIP"
+echo "ssh-copy-id ${USER}@$MYIP"
 echo " "
