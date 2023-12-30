@@ -46,7 +46,7 @@ if [ ! -f $HOME/.ssh/github ]; then
  echo "systemctl restart sshd"
  echo " "
  mkdir -p $HOME/.ssh 2>/dev/null
- scp -OT root@10.0.0.4:".ssh/github .ssh/github.pub .ssh/config" $HOME/.ssh/
+ scp -o StrictHostKeyChecking=accept-new -OT root@10.0.0.4:".ssh/github .ssh/github.pub .ssh/config" $HOME/.ssh/
  chmod 600 $HOME/.ssh/github
  chmod 644 $HOME/.ssh/github.pub
  chmod 644 $HOME/.ssh/config
@@ -100,7 +100,7 @@ EOF
 fi
 
 echo "$B Connecting to Github via ssh to add to known hosts"
-ssh -T git@github.com
+ssh -o StrictHostKeyChecking=accept-new -T git@github.com
 
 # git repo setup
 if [ ! -f $HOME/.gitcfg/config ]; then
