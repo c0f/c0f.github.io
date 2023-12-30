@@ -3,6 +3,22 @@
 # Banner
 B=[][][][]
 
+if [ -f /etc/os-release ]; then
+ . /etc/os-release
+ OS=$ID
+ echo "$B OS is $OS"
+ if [[ $OS == *"opensuse"* ]]; then
+  INSTALLCMD="zypper install -y"
+ else
+  INSTALLCMD="apt -y install"
+ fi
+ echo $INSTALLCMD
+else
+ echo "$B /etc/os-release not found, can't determine OS so using apt"
+ INSTALLCMD="apt -y install"
+fi
+
+
 if [ -z "$1" ]; then
  echo "$B Enter Github email address as command line parameter"
  exit
@@ -13,12 +29,12 @@ fi
 
 if [ ! -x "$(command -v "git")" ]; then
  echo "$B Git not found, installing git"
- sudo apt -y install git
+ sudo $INSTALLCMD git
 fi
 
 if [ ! -x "$(command -v "sshd")" ]; then
  echo "$B OpenSSH not found, installing openssh-server"
- sudo apt -y install openssh-server
+ sudo $INSTALLCMD openssh-server
 fi
 
 echo "$B Enabling ssh server"
