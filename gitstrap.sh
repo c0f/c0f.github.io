@@ -51,7 +51,7 @@ echo "$B Using $SETGIT"
 SETOS=`uname | tr '[:upper:]' '[:lower:]'`
 echo "$B OS is $SETOS"
 
-SETGITNAME=`uname -a`
+SETGITNAME="$USER@$HOSTNAME"
 echo "$B GITNAME is $SETGITNAME"
 
 # ssh key setup
