@@ -111,5 +111,5 @@ gitc status
 echo "$B Run these commands for initial pull."
 echo "rm .bashrc .bash_profile .gitignore .profile"
 echo "alias gitc='$SETGIT --git-dir=$HOME/.gitcfg/ --work-tree=$HOME'"
-echo "gitc pull origin master"
+echo "gitc pull origin main"
 echo " "
