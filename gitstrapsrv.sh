@@ -2,7 +2,6 @@
 # Banner
 B=[][][][]
 
-GITEMAIL=srv@o9.org
 REPO=srv
 
 if [ ! -x "$(command -v "git")" ]; then
@@ -17,9 +16,6 @@ fi
 
 SETGIT=`which git`
 echo "$B Using $SETGIT"
-
-GITNAME=`uname -a`
-echo "$B GITNAME is $GITNAME"
 
 # ssh key setup
 if [ ! -f $HOME/.ssh/github ]; then
@@ -89,12 +85,19 @@ echo "$B Installing"
 sudo apt -y install fail2ban auditd msmtp msmtp-mta s-nail
 
 echo "$B Settings"
+GITEMAIL=bod@o9.org
+GITNAME="$USER@$HOSTNAME"
+GITUSERNAME=bod
+echo "$B Git Name: $GITNAME  /  Email: $GITEMAIL  /  Username: $GITUSERNAME"
 gitc config --local status.showUntrackedFiles no
+gitc config --local user.email "$GITEMAIL"
+gitc config --local user.name "$GITNAME" # This is displayed as the 'Author' in commits
+gitc config --local user.username "$GITUSERNAME"
 git config --global credential.helper cache
 git config --global credential.helper 'cache --timeout=7200'
 git config --global user.email "$GITEMAIL"
-git config --global user.name "$GITNAME"
-git config --global user.username c0f
+git config --global user.name "$GITNAME" # This is displayed as the 'Author' in commits
+git config --global user.username "$GITUSERNAME"
 
 echo "$B Remote will be ssh://git@github.com/c0f/$REPO.git"
 gitc remote add origin ssh://git@github.com/c0f/$REPO.git
